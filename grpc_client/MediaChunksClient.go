@@ -2,6 +2,7 @@ package grpc_client
 
 import (
 	"fmt"
+	"github.com/golang/protobuf/ptypes/empty"
 	"go-sequence-manager/Models"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
@@ -14,8 +15,7 @@ type MediaChunksClient struct {
 	client pbMediaChunks.MediaMetadataClient
 }
 
-func (mediaChunksClient *MediaChunksClient) GetMediaChunksResolution(mediaId int32, resolution string) (*pbMediaChunks.MediaChunkInfoResponseRepeated, error)  {
-
+func (mediaChunksClient *MediaChunksClient) GetMediaChunksInfoResolution(mediaId int32, resolution string) (*pbMediaChunks.MediaChunkInfoResponseRepeated, error)  {
 	response, err := mediaChunksClient.client.GetMediaChunksResolution(context.Background(), &pbMediaChunks.MediaChunkResolutionRequest{
 		Resolution:           resolution,
 		MediaId:              mediaId,
@@ -27,6 +27,21 @@ func (mediaChunksClient *MediaChunksClient) GetMediaChunksResolution(mediaId int
 
 	return response, nil
 }
+
+func (mediaChunksClient *MediaChunksClient) GetAvailableResolutions() (*pbMediaChunks.ResolutionResponse, error) {
+	response, err := mediaChunksClient.client.GetAvailableResolutions(context.Background(),  &empty.Empty{
+		XXX_NoUnkeyedLiteral: struct{}{},
+		XXX_unrecognized:     nil,
+		XXX_sizecache:        0,
+	});
+
+	if err != nil {
+		return nil, err
+	}
+
+	return response, nil
+}
+
 
 func InitMediaChunksClient() *MediaChunksClient {
 	env := Models.GetEnvStruct()
