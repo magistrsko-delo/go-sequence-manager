@@ -13,6 +13,55 @@ type SequenceMediaController struct {
 	SequenceMediaService *services.SequenceMediaService
 }
 
+func (sequenceMediaController *SequenceMediaController) AddMediaToSequence (w http.ResponseWriter, r *http.Request)  {
+	params := mux.Vars(r)
+
+	sequenceId, err := strconv.Atoi(params["sequenceId"])
+	mediaId, err := strconv.Atoi(params["mediaId"])
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	rsp, err := sequenceMediaController.SequenceMediaService.AddMediaToSequence(int32(sequenceId), int32(mediaId))
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	json.NewEncoder(w).Encode(&DTO.ResponseDTO{
+		Status:  0,
+		Message: "",
+		Data:    rsp,
+	})
+}
+
+func (sequenceMediaController *SequenceMediaController) DeleteMediaFromSequence (w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+
+	sequenceId, err := strconv.Atoi(params["sequenceId"])
+	mediaId, err := strconv.Atoi(params["mediaId"])
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	rsp, err := sequenceMediaController.SequenceMediaService.DeleteMediaFromSequence(int32(sequenceId), int32(mediaId))
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	json.NewEncoder(w).Encode(&DTO.ResponseDTO{
+		Status:  0,
+		Message: "",
+		Data:    rsp,
+	})
+}
+
+
 func (sequenceMediaController *SequenceMediaController) GetSequenceMedia(w http.ResponseWriter, r *http.Request)  {
 	params := mux.Vars(r)
 

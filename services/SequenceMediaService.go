@@ -11,6 +11,41 @@ type SequenceMediaService struct {
 	mediaMetadataGrpcClient *grpc_client.MediaMetadataClient
 }
 
+func (sequenceMediaService *SequenceMediaService) AddMediaToSequence(sequenceId int32, mediaId int32) (*DTO.SequenceMediaDTO, error) {
+
+	statusRsp, err := sequenceMediaService.sequenceServiceGrpcClient.AddMediaToSequence(sequenceId, mediaId)
+
+	if err != nil || statusRsp.GetStatus() != 200 {
+		return nil, err
+	}
+
+	sequenceMediaDTO, err := sequenceMediaService.GetSequenceMedias(sequenceId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return sequenceMediaDTO, nil
+}
+
+func (sequenceMediaService *SequenceMediaService) DeleteMediaFromSequence(sequenceId int32, mediaId int32) (*DTO.SequenceMediaDTO, error) {
+
+	statusRsp, err := sequenceMediaService.sequenceServiceGrpcClient.DeleteMediaFromSequence(sequenceId, mediaId)
+
+	if err != nil || statusRsp.GetStatus() != 200 {
+		return nil, err
+	}
+
+	sequenceMediaDTO, err := sequenceMediaService.GetSequenceMedias(sequenceId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return sequenceMediaDTO, nil
+}
+
+
 func (sequenceMediaService *SequenceMediaService) GetSequenceMedias(sequenceId int32) (*DTO.SequenceMediaDTO, error)  {
 
 	sequenceMediaData, err := sequenceMediaService.sequenceServiceGrpcClient.GetSequenceMedia(sequenceId)
