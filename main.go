@@ -18,6 +18,7 @@ func init()  {
 }
 
 func main()  {
+
 	r := mux.NewRouter()
 
 	api := r.PathPrefix("/v1").Subrouter()
