@@ -54,13 +54,13 @@ func (sequenceServiceClient *SequenceServiceClient) DeleteMediaFromSequence(sequ
 
 func InitSequenceServiceMetadata() *SequenceServiceClient  {
 	env := Models.GetEnvStruct()
-	fmt.Println("CONNECTING mediaMetadata client")
+	fmt.Println("CONNECTING sequence client")
 	conn, err := grpc.Dial(env.SequenceServiceServer + ":" + env.SequenceServicePort, grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
 
-	fmt.Println("END CONNECTION mediaMetadata client")
+	fmt.Println("END CONNECTION sequence client")
 
 	client := pbSequenceService.NewSequenceMetadataClient(conn)
 	return &SequenceServiceClient{

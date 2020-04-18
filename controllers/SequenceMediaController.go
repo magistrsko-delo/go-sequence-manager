@@ -80,7 +80,7 @@ func (sequenceMediaController *SequenceMediaController) GetSequenceMedia(w http.
 	}
 
 	json.NewEncoder(w).Encode(&DTO.ResponseDTO{
-		Status:  0,
+		Status:  200,
 		Message: "",
 		Data:    rsp,
 	})

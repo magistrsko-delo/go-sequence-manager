@@ -30,9 +30,6 @@ func (mediaChunksClient *MediaChunksClient) GetMediaChunksInfoResolution(mediaId
 
 func (mediaChunksClient *MediaChunksClient) GetAvailableResolutions() (*pbMediaChunks.ResolutionResponse, error) {
 	response, err := mediaChunksClient.client.GetAvailableResolutions(context.Background(),  &empty.Empty{
-		XXX_NoUnkeyedLiteral: struct{}{},
-		XXX_unrecognized:     nil,
-		XXX_sizecache:        0,
 	});
 
 	if err != nil {

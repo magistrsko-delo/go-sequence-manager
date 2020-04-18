@@ -60,9 +60,7 @@ func (sequenceTimeShiftService *SequenceTimeShiftService) GetSequenceTimeShiftDa
 					ChunksUrl:      "testUrl",
 				})
 			}
-
 		}
-
 	}
 
 	return sequenceTimeShiftDTO, nil
