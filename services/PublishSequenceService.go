@@ -2,6 +2,7 @@ package services
 
 import (
 	"encoding/json"
+	"errors"
 	DTO_input "go-sequence-manager/Models/DTO/input"
 	"go-sequence-manager/grpc_client"
 )
@@ -13,9 +14,13 @@ type PublishSequenceService struct {
 
 func (publishSequenceService *PublishSequenceService) PublishSequence(publishInput *DTO_input.InputPublishSequence) (bool, error) {
 
-	_, err := publishSequenceService.sequenceGrpcClient.GetSequenceMedia(publishInput.SequenceId)
+	sequenceData, err := publishSequenceService.sequenceGrpcClient.GetSequenceMedia(publishInput.SequenceId)
 	if err != nil {
 		return false, err
+	}
+
+	if sequenceData.GetSequence().GetStatus() >= 3 {
+		return false, errors.New("sequence status 3 or greater.. already published")
 	}
 
 	publishSequenceMessageForQueue, err := json.Marshal(publishInput)
