@@ -14,6 +14,22 @@ type SequenceServiceClient struct {
 	client pbSequenceService.SequenceMetadataClient
 }
 
+func (sequenceServiceClient *SequenceServiceClient) UpdateSequenceMetadata(sequenceId int32, name string, status int32, projectId int32, thumbnail string) (*pbSequenceService.SequenceMediaResponse, error) {
+	response, err := sequenceServiceClient.client.UpdateSequence(context.Background(), &pbSequenceService.UpdateSequenceRequest{
+		SequenceId:           sequenceId,
+		Name:                 name,
+		Status:               status,
+		ProjectId:            projectId,
+		Thumbnail:            thumbnail,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return response, nil
+}
+
 func (sequenceServiceClient *SequenceServiceClient) GetSequenceMedia(sequenceId int32) (*pbSequenceService.SequenceMediaResponse, error)  {
 	response, err := sequenceServiceClient.client.GetSequenceMedia(context.Background(), &pbSequenceService.SequenceIdRequest{
 		SequenceId:           sequenceId,

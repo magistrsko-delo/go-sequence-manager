@@ -14,6 +14,7 @@ type SequenceData struct {
 	Name string `json:"name"`
 	ProjectId int32 `json:"projectId"`
 	Status int32 `json:"status"`
+	Thumbnail string `json:"thumbnail"`
 	CreatedAt int64 `json:"createdAt"`
 	UpdatedAt int64 `json:"updatedAt"`
 } 

@@ -19,6 +19,28 @@ func (sequenceMediaService *SequenceMediaService) AddMediaToSequence(sequenceId 
 		return nil, err
 	}
 
+	sequenceMedias, err := sequenceMediaService.sequenceServiceGrpcClient.GetSequenceMedia(sequenceId)
+	if err != nil {
+		return nil, err
+	}
+
+	mediaMetadataRsp, err := sequenceMediaService.mediaMetadataGrpcClient.GetMediaMetadata(sequenceMedias.GetMediaIds()[0]) // first media thumbnail
+
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = sequenceMediaService.sequenceServiceGrpcClient.UpdateSequenceMetadata(
+		sequenceMedias.GetSequence().GetSequenceId(),
+		sequenceMedias.GetSequence().GetName(),
+		sequenceMedias.GetSequence().GetStatus(),
+		sequenceMedias.GetSequence().GetProjectId(),
+		mediaMetadataRsp.GetThumbnail())
+
+	if err != nil {
+		return nil, err
+	}
+
 	sequenceMediaDTO, err := sequenceMediaService.GetSequenceMedias(sequenceId)
 
 	if err != nil {
@@ -42,6 +64,23 @@ func (sequenceMediaService *SequenceMediaService) DeleteMediaFromSequence(sequen
 		return nil, err
 	}
 
+	if len(sequenceMediaDTO.Medias) == 0 {
+
+		_, _ = sequenceMediaService.sequenceServiceGrpcClient.UpdateSequenceMetadata(
+			sequenceMediaDTO.Sequence.SequenceId,
+			sequenceMediaDTO.Sequence.Name,
+			sequenceMediaDTO.Sequence.Status,
+			sequenceMediaDTO.Sequence.ProjectId,
+			"")
+
+		sequenceMediaDTO, err = sequenceMediaService.GetSequenceMedias(sequenceId)
+
+		if err != nil {
+			return nil, err
+		}
+
+	}
+
 	return sequenceMediaDTO, nil
 }
 
@@ -60,6 +99,7 @@ func (sequenceMediaService *SequenceMediaService) GetSequenceMedias(sequenceId i
 			Name:       sequenceMediaData.GetSequence().GetName(),
 			ProjectId:  sequenceMediaData.GetSequence().GetProjectId(),
 			Status:     sequenceMediaData.GetSequence().GetStatus(),
+			Thumbnail: 	sequenceMediaData.GetSequence().GetThumbnail(),
 			CreatedAt:  sequenceMediaData.GetSequence().GetCreatedAt(),
 			UpdatedAt:  sequenceMediaData.GetSequence().GetUpdatedAt(),
 		},
